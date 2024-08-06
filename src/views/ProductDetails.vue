@@ -1,9 +1,9 @@
 <template>
-  <div v-if="loading" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
-    <p class="text-white text-2xl">Loading...</p>
-  </div>
-  <div v-else-if="product" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+  <div class="container mx-auto p-4">
+    <div v-if="loading" class="text-center text-gray-600 py-4">
+      <p class="text-2xl">Loading...</p>
+    </div>
+    <div v-else-if="product" class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
       <h2 class="text-3xl font-bold mb-4">{{ product.title }}</h2>
       <div class="flex flex-col md:flex-row">
         <img :src="product.image" alt="Product Image" class="w-full md:w-1/2 h-64 object-contain mb-4 md:mb-0 md:mr-4">
@@ -49,5 +49,5 @@ function goBack() {
   router.push('/');
 }
 
-const getStarClass = (i) => i <= Math.round(product.value.rating.rate) ? 'fas fa-star text-yellow-400' : 'far fa-star';
+const getStarClass = (i) => i <= Math.round(product.value?.rating?.rate || 0) ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300';
 </script>

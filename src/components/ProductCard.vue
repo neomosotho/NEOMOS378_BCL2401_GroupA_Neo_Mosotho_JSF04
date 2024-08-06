@@ -21,6 +21,7 @@
   
   <script setup>
   import { ref, computed } from 'vue';
+  import { useRouter } from 'vue-router';
   
   const props = defineProps({
     product: {
@@ -29,12 +30,12 @@
     }
   });
   
-  const emit = defineEmits(['view-details']);
-  const isFavorite = ref(false);
-  
-  const viewDetails = () => {
-    emit('view-details', props.product.id);
-  };
+  const router = useRouter();
+const isFavorite = ref(false);
+
+const viewDetails = () => {
+  router.push(`/product/${props.product.id}`);
+};
   
   const toggleFavorite = () => {
     isFavorite.value = !isFavorite.value;

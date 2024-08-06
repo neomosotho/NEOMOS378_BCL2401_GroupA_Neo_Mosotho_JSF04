@@ -1,5 +1,5 @@
 <!-- src/components/ProductModal.vue -->
-<template>
+<!-- <template>
   <div class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
       <h2 class="text-2xl font-bold mb-4">{{ singleProduct.title }}</h2>
@@ -39,5 +39,4 @@ export default {
 </script>
 
 <style scoped>
-/* Add any necessary styling here */
-</style>
+</style> -->

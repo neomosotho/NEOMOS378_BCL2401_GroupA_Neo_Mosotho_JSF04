@@ -3,9 +3,9 @@
     <div class="container mx-auto p-4">
       <FilterSort
         :categories="categories"
-        :selectedCategory="selectedCategory"
-        :sortOrder="sortOrder"
-        :searchQuery="searchQuery"
+        :selectedCategory="softFilter.selectedCategory"
+        :sortOrder="softFilter.sortOrder"
+        :searchQuery="softFilter.searchQuery"
         @categoryChange="handleCategoryChange"
         @sortChange="handleSortChange"
         @searchChange="handleSearchChange"
@@ -21,12 +21,12 @@ import { ref, onMounted, computed } from 'vue';
 import { fetchProducts, fetchCategories } from '../api/index.js';
 import FilterSort from '../components/FilterSort.vue';
 import ProductGrid from '../components/ProductGrid.vue';
+import { useSoftFilterStore } from '../store/softFilter.js';
+
+const softFilter = useSoftFilterStore();
 
 const products = ref([]);
 const categories = ref([]);
-const selectedCategory = ref('');
-const sortOrder = ref('asc');
-const searchQuery = ref('');
 const loading = ref(true);
 const error = ref(null);
 
@@ -34,7 +34,7 @@ const loadProducts = async () => {
   loading.value = true;
   error.value = null;
   try {
-    products.value = await fetchProducts(selectedCategory.value);
+    products.value = await fetchProducts(softFilter.selectedCategory);
   } catch (err) {
     console.error('Error loading products:', err);
     error.value = 'Failed to load products. Please try again later.';
@@ -46,27 +46,27 @@ const loadProducts = async () => {
 
 const filteredProducts = computed(() => {
   let filtered = products.value.filter(product =>
-    product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    product.title.toLowerCase().includes(softFilter.searchQuery.toLowerCase())
   );
 
   filtered.sort((a, b) =>
-    sortOrder.value === 'asc' ? a.price - b.price : b.price - a.price
+    softFilter.sortOrder === 'asc' ? a.price - b.price : b.price - a.price
   );
 
   return filtered;
 });
 
 const handleCategoryChange = (category) => {
-  selectedCategory.value = category;
+  softFilter.setCategory(category);
   loadProducts();
 };
 
 const handleSortChange = (order) => {
-  sortOrder.value = order;
+  softFilter.setSortOrder(order);
 };
 
 const handleSearchChange = (query) => {
-  searchQuery.value = query;
+  softFilter.setSearchQuery(query);
 };
 
 onMounted(async () => {
