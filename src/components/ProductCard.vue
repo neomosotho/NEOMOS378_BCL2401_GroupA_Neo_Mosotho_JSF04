@@ -1,7 +1,6 @@
-<!-- src/components/ProductCard.vue -->
 <template>
   <div class="bg-white rounded-lg shadow-md p-4">
-    <img :src="product.image" alt="Product Image" class="w-400 h-40 object-cover">
+    <img :src="product.image" alt="Product Image" class="w-400 h-40 object-cover" />
     <div class="mt-4">
       <h2 class="text-lg font-bold text-gray-800">{{ product.title }}</h2>
       <p class="text-gray-600">${{ product.price.toFixed(2) }}</p>
@@ -20,41 +19,30 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ProductCard',
-  props: {
-    product: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isFavorite: false
-    };
-  },
-  computed: {
-    favoriteClass() {
-      return this.isFavorite ? 'fas fa-heart text-red-500' : 'far fa-heart';
-    }
-  },
-  methods: {
-    viewDetails() {
-      this.$emit('view-details', this.product.id);
-    },
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite;
-    },
-    getStarClass(i) {
-      return i <= Math.round(this.product.rating.rate)
-        ? 'fas fa-star text-yellow-400'
-        : 'far fa-star';
-    }
-  }
-};
-</script>
+<script setup>
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-<style scoped>
-/* Add any necessary styling here */
-</style>
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true
+  }
+});
+
+const emit = defineEmits(['view-details']);
+const isFavorite = ref(false);
+const router = useRouter();
+
+const viewDetails = () => {
+  emit('view-details', props.product.id);
+};
+
+const toggleFavorite = () => {
+  isFavorite.value = !isFavorite.value;
+};
+
+const favoriteClass = computed(() => isFavorite.value ? 'fas fa-heart text-red-500' : 'far fa-heart');
+
+const getStarClass = (i) => i <= Math.round(props.product.rating.rate) ? 'fas fa-star text-yellow-400' : 'far fa-star';
+</script>
