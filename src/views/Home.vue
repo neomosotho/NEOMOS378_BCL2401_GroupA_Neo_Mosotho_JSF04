@@ -1,93 +1,81 @@
-<!-- src/views/Home.vue -->
 <template>
   <div>
-    <Navbar />
     <div class="container mx-auto p-4">
       <FilterSort
         :categories="categories"
         :selectedCategory="selectedCategory"
         :sortOrder="sortOrder"
         :searchQuery="searchQuery"
-        @category-change="handleCategoryChange"
-        @sort-change="handleSortChange"
-        @search-change="handleSearchChange"
+        @categoryChange="handleCategoryChange"
+        @sortChange="handleSortChange"
+        @searchChange="handleSearchChange"
       />
-      <ProductGrid :products="filteredProducts" />
+      <ProductGrid :products="filteredProducts" :loading="loading" />
+      <div v-if="error" class="text-red-500 text-center mt-4">{{ error }}</div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, computed } from 'vue';
-import Navbar from '../components/Navbar.vue';
+import { fetchProducts, fetchCategories } from '../api/index.js';
 import FilterSort from '../components/FilterSort.vue';
 import ProductGrid from '../components/ProductGrid.vue';
-import { fetchCategories, fetchProducts } from '../api';
 
-export default {
-  name: 'Home',
-  components: {
-    Navbar,
-    FilterSort,
-    ProductGrid
-  },
-  setup() {
-    const products = ref([]);
-    const filteredProducts = computed(() => {
-      return products.value.filter(product => {
-        return (
-          (!selectedCategory.value || product.category === selectedCategory.value) &&
-          (!searchQuery.value || product.title.toLowerCase().includes(searchQuery.value.toLowerCase()))
-        );
-      }).sort((a, b) => {
-        if (sortOrder.value === 'asc') {
-          return a.price - b.price;
-        } else if (sortOrder.value === 'desc') {
-          return b.price - a.price;
-        } else {
-          return 0;
-        }
-      });
-    });
+const products = ref([]);
+const categories = ref([]);
+const selectedCategory = ref('');
+const sortOrder = ref('asc');
+const searchQuery = ref('');
+const loading = ref(true);
+const error = ref(null);
 
-    const categories = ref([]);
-    const selectedCategory = ref('');
-    const sortOrder = ref('asc');
-    const searchQuery = ref('');
-
-    const fetchData = async () => {
-      categories.value = await fetchCategories();
-      products.value = await fetchProducts();
-    };
-
-    onMounted(fetchData);
-
-    const handleCategoryChange = (category) => {
-      selectedCategory.value = category;
-    };
-
-    const handleSortChange = (order) => {
-      sortOrder.value = order;
-    };
-
-    const handleSearchChange = (query) => {
-      searchQuery.value = query;
-    };
-
-    return {
-      categories,
-      selectedCategory,
-      sortOrder,
-      searchQuery,
-      filteredProducts,
-      handleCategoryChange,
-      handleSortChange,
-      handleSearchChange
-    };
+const loadProducts = async () => {
+  loading.value = true;
+  error.value = null;
+  try {
+    products.value = await fetchProducts(selectedCategory.value);
+  } catch (err) {
+    console.error('Error loading products:', err);
+    error.value = 'Failed to load products. Please try again later.';
+    products.value = [];
+  } finally {
+    loading.value = false;
   }
 };
-</script>
 
-<style>
-/* Add any necessary styling here */
-</style>
+const filteredProducts = computed(() => {
+  let filtered = products.value.filter(product =>
+    product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+
+  filtered.sort((a, b) =>
+    sortOrder.value === 'asc' ? a.price - b.price : b.price - a.price
+  );
+
+  return filtered;
+});
+
+const handleCategoryChange = (category) => {
+  selectedCategory.value = category;
+  loadProducts();
+};
+
+const handleSortChange = (order) => {
+  sortOrder.value = order;
+};
+
+const handleSearchChange = (query) => {
+  searchQuery.value = query;
+};
+
+onMounted(async () => {
+  try {
+    categories.value = await fetchCategories();
+  } catch (err) {
+    console.error('Error loading categories:', err);
+    categories.value = [];
+  }
+  await loadProducts();
+});
+</script>

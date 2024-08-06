@@ -3,14 +3,14 @@
     <div class="flex items-center space-x-4">
       <div>
         <label for="category" class="mr-2">Category:</label>
-        <select id="category" v-model="selectedCategory" @change="emitCategoryChange">
+        <select id="category" v-model="localSelectedCategory" @change="emitCategoryChange">
           <option value="">All</option>
           <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
         </select>
       </div>
       <div>
         <label for="sort" class="mr-2">Sort by:</label>
-        <select id="sort" v-model="sortOrder" @change="emitSortChange">
+        <select id="sort" v-model="localSortOrder" @change="emitSortChange">
           <option value="Default">Default</option>
           <option value="asc">Price: Low to High</option>
           <option value="desc">Price: High to Low</option>
@@ -18,14 +18,14 @@
       </div>
       <div>
         <label for="search" class="mr-2">Search:</label>
-        <input id="search" type="text" v-model="searchQuery" @input="emitSearchChange" placeholder="Search products..." class="border rounded px-2 py-1">
+        <input id="search" type="text" v-model="localSearchQuery" @input="emitSearchChange" placeholder="Search products..." class="border rounded px-2 py-1">
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   categories: Array,
@@ -36,15 +36,19 @@ const props = defineProps({
 
 const emit = defineEmits(['categoryChange', 'sortChange', 'searchChange']);
 
-function emitCategoryChange() {
-  emit('categoryChange', props.selectedCategory);
-}
+// Create local state for the v-model bindings
+const localSelectedCategory = ref(props.selectedCategory);
+const localSortOrder = ref(props.sortOrder);
+const localSearchQuery = ref(props.searchQuery);
 
-function emitSortChange() {
-  emit('sortChange', props.sortOrder);
-}
-
-function emitSearchChange() {
-  emit('searchChange', props.searchQuery);
-}
+// Watch for changes in the local state and emit updates
+watch(localSelectedCategory, (newValue) => {
+  emit('categoryChange', newValue);
+});
+watch(localSortOrder, (newValue) => {
+  emit('sortChange', newValue);
+});
+watch(localSearchQuery, (newValue) => {
+  emit('searchChange', newValue);
+});
 </script>

@@ -2,25 +2,38 @@
 const BASE_URL = 'https://fakestoreapi.com';
 
 export async function fetchCategories() {
-  const response = await fetch(`${BASE_URL}/products/categories`);
-  return await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/products/categories`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
 }
 
 export async function fetchProducts(category = '') {
-  let url = `${BASE_URL}/products`;
-  if (category) {
-    url += `/category/${category}`;
+  try {
+    let url = `${BASE_URL}/products`;
+    if (category) {
+      url += `/category/${encodeURIComponent(category)}`;
+    }
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
   }
-  const response = await fetch(url);
-  data = await response.json();
-  return { response: data };
-
 }
 
 export async function fetchSingleProduct(productId) {
-  const response = await fetch(`${BASE_URL}/products/${productId}`);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await fetch(`${BASE_URL}/products/${productId}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching single product:', error);
+    throw error;
   }
-  return await response.json();
 }

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { fetchCategories, fetchProducts } from '../api.js';
+import { fetchCategories, fetchProducts } from '../api/index.js';
+
 
 export const useProductStore = defineStore('products', {
   state: () => ({

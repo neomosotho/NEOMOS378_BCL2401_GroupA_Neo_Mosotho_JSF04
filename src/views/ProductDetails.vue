@@ -25,7 +25,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { fetchSingleProduct } from '../api.js';
+import { fetchSingleProduct } from '../api/index.js';
 
 const route = useRoute();
 const router = useRouter();
