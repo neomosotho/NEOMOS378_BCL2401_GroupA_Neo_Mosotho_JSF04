@@ -9,6 +9,3 @@
 import Navbar from './components/Navbar.vue'
 </script>
 
-<style>
-/* You can add any global styles here */
-</style>
