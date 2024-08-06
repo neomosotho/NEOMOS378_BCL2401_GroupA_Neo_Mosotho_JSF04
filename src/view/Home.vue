@@ -1,14 +1,11 @@
 <template>
   <div id="app">
     <Navbar />
-    <router-view></router-view>
+    <Home />
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue'
+import Home from './views/Home.vue'
 </script>
-
-<style>
-/* You can add any global styles here */
-</style>
