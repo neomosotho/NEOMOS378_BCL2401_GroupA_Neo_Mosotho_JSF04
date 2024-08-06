@@ -11,13 +11,14 @@ const routes = [
   {
     path: '/product/:id',
     name: 'ProductDetails',
-    component: ProductDetails
+    component: ProductDetails,
+    props: true
   }
-]
+];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
 
 export default router
