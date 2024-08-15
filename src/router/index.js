@@ -1,28 +1,47 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import ProductDetails from '../views/ProductDetails.vue';
+// src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../views/Home.vue'
+import ProductDetails from '../views/ProductDetails.vue'
+import Login from '../views/Login.vue'
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/product/:id', component: ProductDetails, props: true },
-    {   path: '/login',
-        name: 'Login',
-        component: Login }
-];
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+    meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/product/:id',
+    name: 'ProductDetails',
+    component: ProductDetails,
+    meta: { requiresAuth: true }
+  }
   
+]
+
 const router = createRouter({
-    history: createWebHistory(),
-    routes
-});
+  history: createWebHistory(),
+  routes
+})
 
 router.beforeEach((to, from, next) => {
-    const isLoggedIn = !!localStorage.getItem('token')
-    
-    if (to.meta.requiresAuth && !isLoggedIn) {
-      next({ name: 'Login', query: { redirect: to.fullPath } })
-    } else {
-      next()
-    }
-  });
+  const isLoggedIn = !!localStorage.getItem('token')
   
-export default router;
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    next({ name: 'Login' })
+  } else if (to.name === 'Login' && isLoggedIn) {
+    next({ name: 'Home' })
+  } else {
+    next()
+  } 
+})
+
+export default router
