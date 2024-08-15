@@ -60,3 +60,49 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+const router = useRouter();
+
+const username = ref('');
+const password = ref('');
+const showPassword = ref(false);
+const isLoading = ref(false);
+const error = ref('');
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const handleLogin = async () => {
+  if (!username.value || !password.value) return;
+
+  isLoading.value = true;
+  error.value = '';
+
+  try {
+    const response = await axios.post('https://fakestoreapi.com/auth/login', {
+      username: username.value,
+      password: password.value
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Store JWT in localStorage
+    localStorage.setItem('token', response.data.token);
+
+    // Redirect to previous page or home
+    router.push(router.currentRoute.value.query.redirect || '/');
+  } catch (err) {
+    error.value = 'Login failed. Please check your credentials and try again.';
+  } finally {
+    isLoading.value = false;
+  }
+};
+</script>
