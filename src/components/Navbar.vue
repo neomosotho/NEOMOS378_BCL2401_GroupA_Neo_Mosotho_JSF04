@@ -9,7 +9,10 @@
     
         <template v-if="isLoggedIn">
         <a href="#" class="text-lg font-semibold">WishList</a>
-        <i class="fas fa-shopping-cart"></i>
+        <router-link to="/cart" class="text-lg font-semibold">
+          <i class="fas fa-shopping-cart"></i>
+          <span v-if="cartItemCount > 0" class="ml-1">{{ cartItemCount }}</span>
+        </router-link>
         <button @click="logout" class="text-lg font-semibold">Logout</button>
       </template>
         <template v-else>
@@ -49,6 +52,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '../store/cartStore'
 
 const router = useRouter()
 const isLoggedIn = ref(false)
@@ -56,14 +60,22 @@ const isOpen = ref(false)
 const toggleOpen = () => {
   isOpen.value = !isOpen.value
 }
+const cartItemCount = computed(() => cartStore.cartItemCount)
+
 
 const checkLoginStatus = () => {
   isLoggedIn.value = !!localStorage.getItem('token')
+  if (isLoggedIn.value) {
+    cartStore.setUserId(localStorage.getItem('token'))
+  } else {
+    cartStore.setUserId(null)
+  }
 }
 
 const logout = () => {
   localStorage.removeItem('token')
   isLoggedIn.value = false
+  cartStore.clearCart()
   router.push({ name: 'Login' })
 }
 

@@ -23,7 +23,16 @@ const routes = [
     name: 'ProductDetails',
     component: ProductDetails,
     meta: { requiresAuth: true }
+  },
+  
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: Cart,
+    meta: { requiresAuth: true }
   }
+
+
   
 ]
 

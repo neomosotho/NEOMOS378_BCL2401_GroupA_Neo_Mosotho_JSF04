@@ -62,9 +62,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '../api/auth'
+import { useCartStore } from '../store/cartStore'
 
 const router = useRouter()
 
@@ -87,7 +88,9 @@ const handleLogin = async () => {
   try {
     const data = await login(username.value, password.value)
     localStorage.setItem('token', data.token)
-    router.push(router.currentRoute.value.query.redirect || '/')
+    cartStore.setUserId(data.token) // Set the user ID in the cart store
+    checkLoginStatus() // Update login status
+    router.push({ name: 'Home' })
   } catch (err) {
     error.value = 'Login failed. Please check your credentials and try again.'
   } finally {

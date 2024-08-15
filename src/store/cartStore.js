@@ -24,5 +24,15 @@ export const useCartStore = defineStore('cart', () => {
         cart.value = []
       }
 
-    return { cart, cartItemCount, addToCart, removeFromCart, clearCart}
+      const setUserId = (token) => {
+        if (token) {
+          const decodedToken = jwtDecode(token)
+          userId.value = decodedToken.sub // Assuming 'sub' is the user ID in the token
+        } else {
+          userId.value = null
+        }
+      }
+
+
+    return { cart, cartItemCount, addToCart, removeFromCart, clearCart, setUserId }
 })
