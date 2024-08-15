@@ -13,5 +13,16 @@ export const useCartStore = defineStore('cart', () => {
       cart.value.push({ ...product, userId: userId.value })
     }
 
-    return { cart, cartItemCount, addToCart}
+    const removeFromCart = (productId) => {
+        const index = cart.value.findIndex(item => item.id === productId)
+        if (index !== -1) {
+          cart.value.splice(index, 1)
+        }
+      }
+
+      const clearCart = () => {
+        cart.value = []
+      }
+
+    return { cart, cartItemCount, addToCart, removeFromCart, clearCart}
 })
