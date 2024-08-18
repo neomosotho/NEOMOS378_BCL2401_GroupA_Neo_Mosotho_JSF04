@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import ProductDetails from '../views/ProductDetails.vue'
 import Login from '../views/Login.vue'
+import Cart from '../views/Cart.vue'
 
 const routes = [
   {
@@ -24,7 +25,7 @@ const routes = [
     component: ProductDetails,
     meta: { requiresAuth: true }
   },
-  
+
   {
     path: '/cart',
     name: 'Cart',
@@ -45,12 +46,10 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('token')
   
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next({ name: 'Login' })
-  } else if (to.name === 'Login' && isLoggedIn) {
-    next({ name: 'Home' })
+    next({ name: 'Login', query: { redirect: to.fullPath } })
   } else {
     next()
-  } 
+  }
 })
 
 export default router

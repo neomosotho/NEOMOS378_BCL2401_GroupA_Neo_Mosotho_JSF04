@@ -50,11 +50,12 @@
 
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../store/cartStore'
 
 const router = useRouter()
+const cartStore = useCartStore()
 const isLoggedIn = ref(false)
 const isOpen = ref(false)
 const toggleOpen = () => {
@@ -63,12 +64,18 @@ const toggleOpen = () => {
 const cartItemCount = computed(() => cartStore.cartItemCount)
 
 
-const checkLoginStatus = () => {
-  isLoggedIn.value = !!localStorage.getItem('token')
-  if (isLoggedIn.value) {
-    cartStore.setUserId(localStorage.getItem('token'))
+const checkLoginStatus = async () => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    try {
+      await cartStore.setUserId(token)
+      isLoggedIn.value = true
+    } catch (error) {
+      console.error('Error setting user ID:', error)
+      isLoggedIn.value = false
+    }
   } else {
-    cartStore.setUserId(null)
+    isLoggedIn.value = false
   }
 }
 
@@ -79,7 +86,9 @@ const logout = () => {
   router.push({ name: 'Login' })
 }
 
-onMounted(checkLoginStatus)
+onMounted(() => {
+  checkLoginStatus()
+})
 
 // Watch for route changes to update login status
 watch(() => router.currentRoute.value, checkLoginStatus)

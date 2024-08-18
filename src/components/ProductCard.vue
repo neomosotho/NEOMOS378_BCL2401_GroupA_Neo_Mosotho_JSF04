@@ -15,6 +15,9 @@
             <i :class="favoriteClass"></i>
           </button>
         </div>
+        <button @click="addToCart" class="mt-2 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
+         Add to Cart
+        </button>
       </div>
     </div>
   </template>
@@ -22,7 +25,8 @@
   <script setup>
   import { ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
-  
+  import { useCartStore } from '../store/cartStore';
+
   const props = defineProps({
     product: {
       type: Object,
@@ -30,7 +34,8 @@
     }
   });
   
-  const router = useRouter();
+const router = useRouter();
+const cartStore = useCartStore();
 const isFavorite = ref(false);
 
 const viewDetails = () => {
@@ -40,7 +45,11 @@ const viewDetails = () => {
   const toggleFavorite = () => {
     isFavorite.value = !isFavorite.value;
   };
-  
+
+  const addToCart = () => {
+  cartStore.addToCart(props.product);
+};
+
   const favoriteClass = computed(() => isFavorite.value ? 'fas fa-heart text-red-500' : 'far fa-heart');
   
   const getStarClass = (i) => i <= Math.round(props.product.rating.rate) ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300';

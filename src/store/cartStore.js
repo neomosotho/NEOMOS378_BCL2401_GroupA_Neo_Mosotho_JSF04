@@ -1,7 +1,6 @@
-// src/stores/cartStore.js
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import jwtDecode from 'jwt-decode'
+// import * as jwtDecode from 'jwt-decode'
 
 export const useCartStore = defineStore('cart', () => {
     const cart = ref([])
@@ -20,19 +19,24 @@ export const useCartStore = defineStore('cart', () => {
         }
       }
 
-      const clearCart = () => {
-        cart.value = []
-      }
+    const clearCart = () => {
+      cart.value = []
+    }
 
-      const setUserId = (token) => {
+    const setUserId = async (token) => {
         if (token) {
-          const decodedToken = jwtDecode(token)
-          userId.value = decodedToken.sub // Assuming 'sub' is the user ID in the token
+          try {
+            const jwtDecode = (await import('jwt-decode')).default
+            const decodedToken = jwtDecode(token)
+            userId.value = decodedToken.sub // Assuming 'sub' is the user ID in the token
+          } catch (error) {
+            console.error('Error decoding token:', error)
+            userId.value = null
+          }
         } else {
           userId.value = null
         }
       }
-
 
     return { cart, cartItemCount, addToCart, removeFromCart, clearCart, setUserId }
 })
