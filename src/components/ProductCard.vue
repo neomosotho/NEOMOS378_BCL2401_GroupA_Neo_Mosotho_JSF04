@@ -18,6 +18,9 @@
         <button @click="addToCart" class="mt-2 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300">
          Add to Cart
         </button>
+        <button @click="addToComparison" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Compare
+      </button>
       </div>
     </div>
   </template>
@@ -26,6 +29,7 @@
   import { ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
   import { useCartStore } from '../store/cartStore';
+  import { useComparisonStore } from '../store/comparisonStore'
 
   const props = defineProps({
     product: {
@@ -36,6 +40,7 @@
   
 const router = useRouter();
 const cartStore = useCartStore();
+const comparisonStore = useComparisonStore();
 const isFavorite = ref(false);
 
 const viewDetails = () => {
@@ -49,6 +54,10 @@ const viewDetails = () => {
   const addToCart = () => {
   cartStore.addToCart(props.product);
 };
+
+  const addToComparison = () => {
+    comparisonStore.addToComparison(props.product);
+  }
 
   const favoriteClass = computed(() => isFavorite.value ? 'fas fa-heart text-red-500' : 'far fa-heart');
   

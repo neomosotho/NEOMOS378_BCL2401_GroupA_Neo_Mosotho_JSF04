@@ -11,4 +11,23 @@ export const useComparisonStore = defineStore('comparison', () => {
             comparisonList.value.push(product)
         }
     }
+
+    const removeFromComparison = () => {
+        const index = comparisonList.value.findIndex(item => item.id === productId)
+        if (index !== -1) {
+            comparisonList.value.splice(index, 1)
+        }
+    }
+
+    const clearComparison = () => {
+        comparisonList.value = []
+    }
+
+    return {
+        comparisonList,
+        comparisonCount,
+        addToComparison,
+        removeFromComparison,
+        clearComparison
+    }
 })
