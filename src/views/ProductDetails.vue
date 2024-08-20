@@ -17,6 +17,16 @@
           <p class="text-gray-600 mb-4">Category: {{ product.category }}</p>
           <button @click="goBack" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Back to Products</button>
         </div>
+        <div>
+          <button 
+          @click="addToComparison(product)" 
+          :disabled="comparisonStore.isComparisonFull"
+          :class="{'opacity-50 cursor-not-allowed': comparisonStore.isComparisonFull}">
+          Add to Comparison</button>
+          <p v-if="comparisonStore.isComparisonFull" class="text-red-500">
+      Comparison list is full (max {{ comparisonStore.MAX_COMPARISON_ITEMS }} items)
+    </p>
+        </div>
       </div>
     </div>
   </div>
@@ -26,12 +36,24 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { fetchSingleProduct } from '../api/index.js';
+import { useComparisonStore } from '../store/comparisonStore.js';
 
 const route = useRoute();
 const router = useRouter();
 const productId = route.params.id;
 const product = ref(null);
 const loading = ref(true);
+const comparisonStore = useComparisonStore()
+const showMessage = ref(false)
+
+const addToComparison = (product) => {
+  if (comparisonStore.addToComparison(product)) {
+    showMessage.value = true
+    setTimeout(() => {
+      showMessage.value = false
+    }, 3000)
+  }
+}
 
 onMounted(async () => {
   try {

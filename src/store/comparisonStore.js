@@ -1,15 +1,22 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+// Define the maximum number of items allowed for comparison
+const MAX_COMPARISON_ITEMS = 3
+
 export const useComparisonStore = defineStore('comparison', () => {
     const comparisonList = ref([])
 
     const comparisonCount = computed(() => comparisonList.value.length)
+    const isComparisonFull = computed(() => comparisonList.value.length >= MAX_COMPARISON_ITEMS)
 
     const addToComparison = (product) => {
-        if (!comparisonList.value.some(item => item.id === product.id)) {
+        if (comparisonList.value.length < MAX_COMPARISON_ITEMS && 
+            !comparisonList.value.some(item => item.id === product.id)) {
             comparisonList.value.push(product)
+            return true
         }
+        return false
     }
 
     const removeFromComparison = () => {
@@ -26,8 +33,10 @@ export const useComparisonStore = defineStore('comparison', () => {
     return {
         comparisonList,
         comparisonCount,
+        isComparisonFull,
         addToComparison,
         removeFromComparison,
-        clearComparison
+        clearComparison,
+        MAX_COMPARISON_ITEMS
     }
 })
