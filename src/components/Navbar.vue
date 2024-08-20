@@ -73,7 +73,7 @@ const checkLoginStatus = async () => {
   const token = localStorage.getItem('token')
   if (token) {
     try {
-      await cartStore.setUserId(token)
+      cartStore.setUserId(token)
       isLoggedIn.value = true
     } catch (error) {
       console.error('Error setting user ID:', error)
