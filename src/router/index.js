@@ -32,14 +32,14 @@ const routes = [
     name: 'Cart',
     component: Cart,
     meta: { requiresAuth: true }
-  }
+  },
 
-  // {
-  //   path: '/comparison',
-  //   name: 'Comparison',
-  //   component: Comparison,
-  //   meta: { requiresAuth: true }
-  // }
+  {
+    path: '/comparison',
+    name: 'Comparison',
+    // component: Comparison,
+    meta: { requiresAuth: true }
+  }
 
 
   

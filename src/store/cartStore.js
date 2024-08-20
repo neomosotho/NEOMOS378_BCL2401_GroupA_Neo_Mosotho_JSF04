@@ -37,19 +37,19 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     const setUserId = async (token) => {
-        if (token) {
-          try {
-            const jwtDecode = (await import('jwt-decode')).default
-            const decodedToken = jwtDecode(token)
-            userId.value = decodedToken.sub // Assuming 'sub' is the user ID in the token
-          } catch (error) {
-            console.error('Error decoding token:', error)
-            userId.value = null
-          }
-        } else {
+      if (token) {
+        try {
+          const { default: jwtDecode } = await import('jwt-decode')
+          const decodedToken = jwtDecode(token)
+          userId.value = decodedToken.sub // Assuming 'sub' is the user ID in the token
+        } catch (error) {
+          console.error('Error decoding token:', error)
           userId.value = null
         }
+      } else {
+        userId.value = null
       }
+  }
 
     return { cart, cartItemCount, cartTotal, addToCart, removeFromCart, updateQuantity, clearCart, setUserId }
 })
