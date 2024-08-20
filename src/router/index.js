@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import ProductDetails from '../views/ProductDetails.vue'
 import Login from '../views/Login.vue'
 import Cart from '../views/Cart.vue'
-// import Comparison from '../views/Comparison.vue'
+import Comparison from '../views/Comparison.vue'
 
 const routes = [
   {
@@ -37,7 +37,7 @@ const routes = [
   {
     path: '/comparison',
     name: 'Comparison',
-    // component: Comparison,
+    component: Comparison,
     meta: { requiresAuth: true }
   }
 

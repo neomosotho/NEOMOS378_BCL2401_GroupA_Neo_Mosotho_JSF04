@@ -69,8 +69,8 @@
   </template>
   
   <script setup>
-  import { useComparisonStore } from '../stores/comparisonStore'
-  import { useCartStore } from '../stores/cartStore'
+  import { useComparisonStore } from '../store/comparisonStore'
+  import { useCartStore } from '../store/cartStore'
   
   const comparisonStore = useComparisonStore()
   const cartStore = useCartStore()
