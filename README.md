@@ -123,3 +123,6 @@ Improve accessibility with ARIA attributes and keyboard navigation
 Implement a checkout and payment process
 
 ## Challenges
+
+## Presentation:
+https://youtu.be/UK2o0YmcRWY
