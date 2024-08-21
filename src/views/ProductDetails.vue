@@ -15,7 +15,7 @@
           </div>
           <p class="text-gray-700 mb-4">{{ product.description }}</p>
           <p class="text-gray-600 mb-4">Category: {{ product.category }}</p>
-          <button @click="goBack" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Back to Products</button>
+          <button @click="goBack" class="bg-blue-600 text-white p-2 rounded hover:bg-slate-600 transition duration-300">Back to Products</button>
         </div>
         <div>
           <button 
