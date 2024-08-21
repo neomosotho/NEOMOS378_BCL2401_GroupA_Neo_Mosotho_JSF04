@@ -38,10 +38,10 @@
   <script setup>
   import { ref } from 'vue';
   import { useWishlistStore } from '../store/wishListStore.js';
-  import { cartStore } from '../store/cartStore.js'
+//   import { cartStore } from '../store/cartStore.js'
   
   const wishlistStore = useWishlistStore();
-  const cartStore = useCartStore();
+//   const cartStore = useCartStore();
 
   const loading = ref(false); // Set to false by default; change if needed
   
