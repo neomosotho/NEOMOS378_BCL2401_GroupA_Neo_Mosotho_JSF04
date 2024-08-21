@@ -1,9 +1,9 @@
 <template>
   <div>
     <nav class="border-slate-600 shadow-md p-4 flex justify-between">
-      <div class="text-2xl font-extrabold text-slate-900">
+      <router-link to="/" class="text-2xl font-extrabold text-slate-900">
         SwiftCraft
-      </div>
+      </router-link>
       <div class="hidden lg:flex space-x-4">
         <template v-if="isLoggedIn">
           <router-link to="/wishlist" class="text-lg font-semibold">
