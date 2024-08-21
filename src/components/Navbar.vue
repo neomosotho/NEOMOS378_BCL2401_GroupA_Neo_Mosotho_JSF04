@@ -87,7 +87,7 @@ const checkLoginStatus = () => {
     cartStore.setUserId(token)
     wishlistStore.setUserId(token)
   } else {
-    cartStore.clearUserId()
+    // cartStore.clearUserId()
     wishlistStore.clearUserId()
   }
 }
