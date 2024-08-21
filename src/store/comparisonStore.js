@@ -19,7 +19,7 @@ export const useComparisonStore = defineStore('comparison', () => {
         return false
     }
 
-    const removeFromComparison = () => {
+    const removeFromComparison = (productId) => {
         const index = comparisonList.value.findIndex(item => item.id === productId)
         if (index !== -1) {
             comparisonList.value.splice(index, 1)

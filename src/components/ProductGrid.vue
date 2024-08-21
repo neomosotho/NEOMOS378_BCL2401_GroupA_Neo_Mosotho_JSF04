@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto p-4">
+    <div class="container mx-auto p-4 bg-slate-200">
       <div v-if="loading" class="text-center text-gray-600 py-4">
         Loading products...
       </div>
