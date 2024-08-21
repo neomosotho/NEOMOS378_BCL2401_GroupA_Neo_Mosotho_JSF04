@@ -5,6 +5,8 @@ import ProductDetails from '../views/ProductDetails.vue'
 import Login from '../views/Login.vue'
 import Cart from '../views/Cart.vue'
 import Comparison from '../views/Comparison.vue'
+import WishList from '../views/WishList.vue'
+
 
 const routes = [
 
@@ -40,6 +42,13 @@ const routes = [
     name: 'Comparison',
     component: Comparison,
     meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/wishList',
+    name: 'wishList',
+    component: WishList,
+    meta: { requiresAuth: true}
   }
 
 ]

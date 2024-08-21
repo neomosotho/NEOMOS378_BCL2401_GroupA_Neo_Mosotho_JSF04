@@ -19,13 +19,28 @@
         </div>
         <div>
           <button 
-          @click="addToComparison(product)" 
-          :disabled="comparisonStore.isComparisonFull"
-          :class="{'opacity-50 cursor-not-allowed': comparisonStore.isComparisonFull}">
-          Add to Comparison</button>
-          <p v-if="comparisonStore.isComparisonFull" class="text-red-500">
-      Comparison list is full (max {{ comparisonStore.MAX_COMPARISON_ITEMS }} items)
-    </p>
+            @click="addToComparison(product)" 
+            :disabled="comparisonStore.isComparisonFull"
+            :class="{'opacity-50 cursor-not-allowed': comparisonStore.isComparisonFull}"
+            class="bg-green-500 text-white p-2 rounded ml-2 hover:bg-green-600 transition duration-300"
+          >
+            Add to Comparison
+          </button>
+          <p v-if="comparisonStore.isComparisonFull" class="text-red-500 mt-2">
+            Comparison list is full (max {{ comparisonStore.MAX_COMPARISON_ITEMS }} items)
+          </p>
+
+          <!-- Wishlist Button -->
+          <button 
+            @click="toggleWishlist(product)" 
+            :class="{'bg-red-500': isInWishlist, 'bg-gray-500': !isInWishlist}" 
+            class="text-white p-2 rounded ml-2 mt-4 hover:bg-red-600 transition duration-300"
+          >
+            {{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+          </button>
+          <p v-if="showWishlistMessage" class="text-green-500 mt-2">
+            {{ isInWishlist ? 'Removed from Wishlist' : 'Added to Wishlist' }}
+          </p>
         </div>
       </div>
     </div>
@@ -33,27 +48,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { fetchSingleProduct } from '../api/index.js';
 import { useComparisonStore } from '../store/comparisonStore.js';
+import { useWishlistStore } from '../store/wishListStore.js';
 
 const route = useRoute();
 const router = useRouter();
 const productId = route.params.id;
 const product = ref(null);
 const loading = ref(true);
-const comparisonStore = useComparisonStore()
-const showMessage = ref(false)
+const comparisonStore = useComparisonStore();
+const wishlistStore = useWishlistStore();
+const showMessage = ref(false);
+const showWishlistMessage = ref(false);
+
+const isInWishlist = computed(() =>
+  wishlistStore.wishlist.some(item => item.id === productId)
+);
+
+const toggleWishlist = (product) => {
+  if (isInWishlist.value) {
+    wishlistStore.removeFromWishlist(product.id);
+  } else {
+    wishlistStore.addToWishlist(product);
+  }
+  showWishlistMessage.value = true;
+  setTimeout(() => {
+    showWishlistMessage.value = false;
+  }, 3000);
+};
 
 const addToComparison = (product) => {
   if (comparisonStore.addToComparison(product)) {
-    showMessage.value = true
+    showMessage.value = true;
     setTimeout(() => {
-      showMessage.value = false
-    }, 3000)
+      showMessage.value = false;
+    }, 3000);
   }
-}
+};
 
 onMounted(async () => {
   try {
@@ -71,5 +105,8 @@ function goBack() {
   router.push('/');
 }
 
-const getStarClass = (i) => i <= Math.round(product.value?.rating?.rate || 0) ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300';
+const getStarClass = (i) =>
+  i <= Math.round(product.value?.rating?.rate || 0)
+    ? 'fas fa-star text-yellow-400'
+    : 'far fa-star text-gray-300';
 </script>
