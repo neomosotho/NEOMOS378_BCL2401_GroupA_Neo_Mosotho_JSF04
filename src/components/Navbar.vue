@@ -4,6 +4,7 @@
       <router-link to="/" class="text-2xl font-extrabold text-slate-900">
         SwiftCraft
       </router-link>
+      
       <div class="hidden lg:flex space-x-4">
         <template v-if="isLoggedIn">
           <router-link to="/wishlist" class="text-lg font-semibold">
