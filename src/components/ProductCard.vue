@@ -26,10 +26,11 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useRouter } from 'vue-router';
   import { useCartStore } from '../store/cartStore';
   import { useComparisonStore } from '../store/comparisonStore'
+  import { useWishlistStore } from '../store/wishListStore';
 
   const props = defineProps({
     product: {
@@ -42,14 +43,22 @@ const router = useRouter();
 const cartStore = useCartStore();
 const comparisonStore = useComparisonStore();
 const isFavorite = ref(false);
+const wishListStore = useWishlistStore();
+
+// const isFavorite = ref(wishListStore.wishlist.some(item => item.id === props.product.id));
 
 const viewDetails = () => {
   router.push(`/product/${props.product.id}`);
 };
   
-  const toggleFavorite = () => {
-    isFavorite.value = !isFavorite.value;
-  };
+const toggleFavorite = () => {
+  if (isFavorite.value) {
+    wishListStore.removeFromWishlist(props.product.id);
+  } else {
+    wishListStore.addToWishlist(props.product);
+  }
+  isFavorite.value = !isFavorite.value;
+};
 
   const addToCart = () => {
   cartStore.addToCart(props.product);
@@ -62,4 +71,9 @@ const viewDetails = () => {
   const favoriteClass = computed(() => isFavorite.value ? 'fas fa-heart text-red-500' : 'far fa-heart');
   
   const getStarClass = (i) => i <= Math.round(props.product.rating.rate) ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300';
+
+  // Watch for changes in the wishlist store and update `isFavorite`
+  watch(() => wishListStore.wishlist, () => {
+  isFavorite.value = wishListStore.wishlist.some(item => item.id === props.product.id);
+}, { deep: true });
   </script>

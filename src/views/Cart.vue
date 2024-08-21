@@ -55,6 +55,7 @@
   
   <script setup>
   import { computed, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
   import { useCartStore } from '../store/cartStore'
   
   const router = useRouter()
