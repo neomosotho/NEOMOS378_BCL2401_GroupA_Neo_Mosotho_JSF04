@@ -7,11 +7,6 @@ import Cart from '../views/Cart.vue'
 import Comparison from '../views/Comparison.vue'
 
 const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
 
   {
     path: '/',
@@ -25,6 +20,12 @@ const routes = [
     name: 'ProductDetails',
     component: ProductDetails,
     meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
 
   {
@@ -50,9 +51,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('token')
-  
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next({ name: 'Login', query: { redirect: to.fullPath } })
+    next({ name: 'Login' })
   } else {
     next()
   }

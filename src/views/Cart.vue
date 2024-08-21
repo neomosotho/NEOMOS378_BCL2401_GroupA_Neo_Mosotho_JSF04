@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div id="summary" class="w-1/4 px-8 py-10">
+      <div v-if="isLoggedIn" id="summary" class="w-1/4 px-8 py-10">
         <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
         <div class="flex justify-between mt-10 mb-5">
           <span class="font-semibold text-sm uppercase">Items {{ cartStore.cartItemCount }}</span>
@@ -45,15 +45,30 @@
         </div>
         <button class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
       </div>
+    
+    <div v-else class="text-center mt-10 text-xl">
+      Redirecting to login...
+    </div>
     </div>
   </div>
 </template>
   
   <script setup>
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useCartStore } from '../store/cartStore'
   
+  const router = useRouter()
   const cartStore = useCartStore()
+
+  // Check if the user is logged in
+  const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+
+  onMounted(() => {
+  if (!isLoggedIn.value) {
+    // Redirect to the login page if not logged in
+    router.push({ name: 'Login' })
+  }
+})
   
   const cart = computed(() => cartStore.cart)
   const cartTotal = computed(() => cart.value.reduce((total, item) => total + item.price, 0))

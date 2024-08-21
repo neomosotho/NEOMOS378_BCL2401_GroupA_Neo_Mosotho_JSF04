@@ -16,11 +16,13 @@
             <i class="fas fa-shopping-cart"></i>
             <span v-if="cartItemCount > 0" class="ml-1">{{ cartItemCount }}</span>
           </router-link>
-          <button @click="logout" class="text-lg font-semibold">Logout</button>
+          <router-link to="/login" class="text-lg font-semibold">
+            Login</router-link>
         </template>
         <template v-else>
-          <router-link to="/login" class="text-lg font-semibold">Login</router-link>
+          <button @click="logout" class="text-lg font-semibold">Logout</button>
         </template>
+
       </div>
       <div>
         <button @click="toggleOpen" class="lg:hidden text-black focus:outline-none p-2 rounded" aria-label="Toggle menu">
@@ -63,24 +65,21 @@ const cartStore = useCartStore()
 const comparisonStore = useComparisonStore()
 const isLoggedIn = ref(false)
 const isOpen = ref(false)
+
 const toggleOpen = () => {
   isOpen.value = !isOpen.value
 }
+
 const cartItemCount = computed(() => cartStore.cartItemCount)
 const comparisonCount = computed(() => comparisonStore.comparisonCount)
 
-const checkLoginStatus = async () => {
+const checkLoginStatus = () => {
   const token = localStorage.getItem('token')
+  isLoggedIn.value = !!token
   if (token) {
-    try {
-      cartStore.setUserId(token)
-      isLoggedIn.value = true
-    } catch (error) {
-      console.error('Error setting user ID:', error)
-      isLoggedIn.value = false
-    }
+    cartStore.setUserId(token)
   } else {
-    isLoggedIn.value = false
+    cartStore.clearUserId()
   }
 }
 
