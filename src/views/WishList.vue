@@ -8,7 +8,6 @@
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
           <option value="rating">Rating</option>
-          <option value="title">Title</option>
         </select>
   
         <input v-model="searchTerm" @input="filterItems" placeholder="Search..." class="p-2 border rounded"/>
@@ -140,7 +139,5 @@
   });
   </script>
   
-  <style scoped>
-  /* Your styles here */
-  </style>
+  
   
